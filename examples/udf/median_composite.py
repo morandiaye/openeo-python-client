@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-from typing import Dict
-
 import xarray
-from openeo_udf.api.datacube import DataCube
+
+from openeo.udf.xarraydatacube import XarrayDataCube
 
 
-def apply_datacube(cube: DataCube, context: Dict) -> DataCube:
+def apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:
     """
     Applies a rolling window median composite to a timeseries datacube.
     This UDF preserves dimensionality, and assumes a datacube with a temporal dimension 't' as input.
@@ -13,7 +11,6 @@ def apply_datacube(cube: DataCube, context: Dict) -> DataCube:
 
     array: xarray.DataArray = cube.get_array()
 
-    import pandas as pd
     import numpy as np
 
     #this method computes dekad's, can be used to resample data to desired frequency
@@ -28,4 +25,4 @@ def apply_datacube(cube: DataCube, context: Dict) -> DataCube:
     composited = array.rolling(t=30,min_periods=1, center=True).median().dropna("t")
     #resample rolling window medians to dekads
     ten_daily_composite = composited.groupby_bins("t",date).median()
-    return DataCube(ten_daily_composite)
+    return XarrayDataCube(ten_daily_composite)
