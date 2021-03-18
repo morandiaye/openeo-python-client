@@ -236,7 +236,7 @@ def test_datacube_plot(tmp_path):
     path = as_path(tmp_path / "test.png")
     xdc.plot("title", oversample=1.2, cbartext="some\nvalue", to_file=path, to_show=False)
 
-    png_data = plt.imread(path)
+    png_data = plt.imread(str(path))
     # Just check basic file properties to make sure the file isn't empty.
     assert len(png_data.shape) == 3
     assert png_data.shape[0] > 100
